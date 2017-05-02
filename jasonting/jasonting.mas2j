@@ -1,0 +1,12 @@
+MAS jasonting {
+
+    infrastructure: Centralised
+	
+	environment: jason.eis.EISAdapter
+
+	agents:
+		agent1 sample_agent #6;
+
+	aslSourcePath:
+		"src/asl";
+}
