@@ -5,7 +5,7 @@ MAS jasonting {
 	environment: jason.eis.EISAdapter
 
 	agents:
-		agent1 sample_agent #6;
+		connectionA #6;
 
 	aslSourcePath:
 		"src/asl";
