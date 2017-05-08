@@ -14,5 +14,4 @@
 	.print("Received step percept.").
 	
 +actionID(X) : true <- 
-	.print("Determining my action");
-	skip.
+	.print("Determining my action").
