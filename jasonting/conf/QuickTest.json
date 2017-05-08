@@ -1,7 +1,7 @@
 {
   "server" : {
     "tournamentMode" : "round-robin",
-    "teamsPerMatch" : 2,
+    "teamsPerMatch" : 1,
     "teamSize" : 6,
     "launch" : "5s",
     "port" : 12300,

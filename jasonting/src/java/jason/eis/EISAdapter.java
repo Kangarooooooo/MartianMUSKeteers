@@ -106,7 +106,6 @@ public class EISAdapter extends Environment implements AgentListener {
 
     @Override
     public boolean executeAction(String agName, Structure action) {
-
         if (ei == null) {
             logger.warning("There is no environment loaded! Ignoring action " + action);
             return false;
