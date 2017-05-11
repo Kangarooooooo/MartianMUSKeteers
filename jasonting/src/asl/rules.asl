@@ -1,0 +1,1 @@
+closest_facility(List, Facility) :- role(Role, _, _, _, _) & jasonting.src/java.actions.closestFinder(Role, List, Facility, lat(LAT), lon(LON)).
