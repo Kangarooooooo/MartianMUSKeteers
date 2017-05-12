@@ -5,40 +5,26 @@
 /* Initial goals */
 
 !start.
-
 /* Plans */
+	
+	
++!start : needToCharge & not atChargingStation <-
+	!!start;
+	goto(chargingStation0).
 
-+!start : true <- .print("hello world.").
++!start : not needToCharge & (not atChargingStation | finnishedCharging)<-
+	!!start;
+	goto(shop0).
 
-+step(X) : true <-
-	.print("Received step percept.").
-	
-+actionID(X) : true <- 
-	.print("Determining my action").
-	
-+charge(X):X>300 <- 
-	!goToChargingStation.
-	
-+charge(X):X<300 <-
-	!goToShop.
-	
-+!goToShop: true<-
-	goto("shop0");
-	.print("Going to shop");
-	!goToShop;
-	.print("Going to shop AGAIN").
-	
-+!goToChargingStation: true<-
-	goto("chargingStation0");
-	.print("Going to charge");
-	!goToChargingStation.
-/*
-+!checkCharge: charge(cd)<500<-
-	.print("going to charge");
-	goto("chargingStation0");
-	!checkCharge.
-	
-+!checkCharge: charge(cd)>=500<-
-	.print("not going to charge");
-	goto("shop0");
-	!checkCharge. */
++!start : atChargingStation & not finnishedCharging <-
+	!!start;
+	charge.
+
+needToCharge:-charge(Power)&role(Role,Speed,_,MaxBattery,_)&Power<(100+MaxBattery/20).
+
+atChargingStation:-chargingStation(chargingStation0,CLAT,CLON,_) & lat(LAT) & lon(LON) & CLAT == LAT & CLON == LON.
+
+finnishedCharging:-role(Role,Speed,Load,MaxBattery,List)&charge(Power)&Power==MaxBattery.
+doJob(JobID, StorageID):-job(JobID,StorageID,_,_,_,RequiredList)&RequiredList=[T|L].//[required(item16,2),required(item12,2)]).
+//job(JobID,storage0,6255,18,151,[required(item16,2),required(item12,2)]).
+//item(item0,78)[entity(connectionA6),source(percept)].
