@@ -6,7 +6,6 @@ MAS jasonting {
 
 	agents:
 		connectionA #6;
-
 	aslSourcePath:
 		"src/asl";
 }

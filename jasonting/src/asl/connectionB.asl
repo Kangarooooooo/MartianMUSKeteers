@@ -6,7 +6,7 @@ canDoJob(JobID):-job(JobID,_,_,_,_,RequiredList)& not (.member(required(Item,Qty
 canBuildItem(Item):-item(Item,_,tools(ToolList1),parts(Parts))&not(.member(required(Item,Qty),RequiredList) & (not .empty(ToolList1)) & not canBuildItem(Item)).//(.member(X,ToolList1)&hasItem(X,_))| //Not used/finnished because we only build items that dont require tools, parts for these items can be bought not built.
 
 
-needToCharge:-charge(Power)&role(Role,Speed,_,MaxBattery,_)&Power<(100+MaxBattery/20).
+needToCharge:-charge(Power)&role(Role,Speed,_,MaxBattery,_)&Power<(200+MaxBattery/20).
 
 finnishedCharging:-role(Role,Speed,Load,MaxBattery,List)&charge(Power)&Power==MaxBattery.
 atChargingStation(ChargingStationID):- chargingStation(ChargingStationID,CLAT,CLON,_) &  lat(LAT) & lon(LON) & CLAT == LAT & CLON == LON.
@@ -33,7 +33,7 @@ shopForSubItem(JobID,Part2,ShopID,Qty4):-job(JobID,_,_,_,_,RequiredList) & .memb
 	goto(ShopID);
 	}
 	else{
-		if(role(truck,Speed,Load,MaxBattery,ToolList)){
+		if(role(car,Speed,Load,MaxBattery,ToolList)){
 		!!choseJob;
 		skip;
 		}
@@ -73,7 +73,7 @@ skip;
 	
 +!decide:activeJob(JobID)<-
 	if(needToCharge){
-		!!chooseChargingStation;
+		!!recharge;
 		skip;
 	}
 	else{
@@ -128,30 +128,29 @@ skip;
 	-activeJob(JobID)
 	skip;
 	.
-	
-+!chooseChargingStation: lat(AgentLat) & lon(AgentLon) <- -+minDistBel("", 1000);
-  	for(chargingStation(Name,Lat,Lon,_)){
-  		actions.distance(Lat, Lon, AgentLat, AgentLon, Distance);
-  		?minDistBel(N, D);
-  		if(Distance < D){
-  			-+minDistBel(Name, Distance);
-  		}
-  	}
-  	?minDistBel(N, D);
-  	!!recharge(N);
-  	goto(N);
- 	.
-	
-+!recharge(ChargingStation) : needToCharge & not atChargingStation(ChargingStation) <-
-	!!recharge(ChargingStation); 
-	goto(ChargingStation).
++!recharge : needToCharge & not atChargingStation(chargingStation1) <-
+    /*!!choseCharging(Chosen);
+    skip;
+    .print("Chose station ", Chosen)*/
+    //!closest;
+	!!recharge; 
+	goto(chargingStation1).
 
-+!recharge(ChargingStation) : not needToCharge & (not atChargingStation(ChargingStation) | finnishedCharging)<-
++!recharge : not needToCharge & (not atChargingStation(chargingStation1) | finnishedCharging)<-
 	!!decide.
 
-+!recharge(ChargingStation) : atChargingStation(ChargingStation) & not finnishedCharging <-
-	!!recharge(ChargingStation);
++!recharge : atChargingStation(chargingStation1) & not finnishedCharging <-
+	!!recharge;
 	charge.
+ 
+ 
++!choseCharging(Chosen): chargingStation(ChargingStationID,CLAT,CLON,_) &  lat(LAT) & lon(LON)<-
+	if(100>((CLAT-LAT) + (CLON-LON))){
+		Chosen = ChargingStationID
+	}
+ skip.
+ 
+
 
 
 +!goBuild(Item): not atWorkShop(workshop0)<-
